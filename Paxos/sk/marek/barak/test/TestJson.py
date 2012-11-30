@@ -5,22 +5,16 @@ Created on Nov 28, 2012
 '''
 import unittest
 import json
+from sk.marek.barak.paxos.Util import Util
 
 class Test(unittest.TestCase): 
 
 
     def testName(self):
-        l = list()
-        l.append("marek")
-        l.append("16")
-        s = str(l)
-        s = s.replace("[", "")
-        s = s.replace("]", "")
-        s = s.replace(" ", "")
-        s = s.replace("'", "")
-        val = s.split(",")
-        for i in val:
-            print i
+        u = Util()
+        u.getValue()
+        u.getValue()
+        u.getValue()
         
 
 
