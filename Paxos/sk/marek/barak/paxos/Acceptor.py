@@ -48,10 +48,13 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
                 print "Wrong message"
         else:
             print "hanlde reject:"
+            self.data = lastAccepted + ";" +"REJECT"
+            for i in elements:
+                self.data+=";"+i
             
         print self.data
         # just send back the same data, but upper-cased
-        self.request.sendall(self.data.upper())
+        self.request.sendall(self.data)
     def parseMessage(self,data):
         val = data.split(";")
         elements = list()

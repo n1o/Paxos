@@ -87,7 +87,7 @@ class ProposerServer(object):
         return elements
 proposer = ProposerServer()
 l = list()
-l.append(proposer.UPDATE)
+l.append(proposer.INSERT)
 l.append("891001/7204")
 l.append("Marek")
 l.append("Barak")
