@@ -16,10 +16,11 @@ class ProposerServer(object):
         self.ACCEPT = "ACCEPT"
         self.LEADER_BONUS = 500000
         self.LEADER = False
-        self.CREATE = "CREATE"
+        self.INSERT = "INSERT"
         self.UPDATE = "UPDATE"
         self.DROP = "DROP"
         self.PROMIS = "PROMIS"
+        self.messageValue = 0
     def send(self,message,host):
         try:
             # Create a socket (SOCK_STREAM means a TCP socket)
@@ -38,32 +39,39 @@ class ProposerServer(object):
         for host in self.HOSTS:
             response = self.send(message, host)
             responses.append(response)
-        
+        return responses
             
-    def getValue(self,leader):
+    def getValue(self):
         val = int(round(time.time() * 100000))
-        if leader:
+        if self.LEADER:
             val += self.LEADER_BONUS
         return val
         
-    def createMessage(self,messageType,messageList):
-        self.setLeader()
-        message = ""
-        message +=str(self.getValue(self.LEADER))+ ";"
-        message +=messageType + ";"
+    def createMessage(self,baseMessage,messageList):
         for item in messageList:
-            message+=item +";"
-        return message
-    def isPromis(self,items):
+            baseMessage+=item +";"
+        return baseMessage
+    
+    def allPrommises(self,items):
         for item in items:
             if self.parseMessage(item).pop(1)!=self.PROMIS:
                 return False
         return True
+    def createProposeMessage(self,messageList):
+        self.setLeader()
+        self.messageValue = str(self.getValue())
+        message =self.messageValue+";"
+        message += self.PROPOSE+";"
+        return self.createMessage(message, messageList)
     
     def getInterval(self):
         now = time.localtime()
         val =  60 - now.tm_sec
         return val
+    def createAcceptMessage(self,messageList):
+        baseMessage = str(self.messageValue) + ";"
+        baseMessage += self.ACCEPT+";"
+        return self.createMessage(baseMessage, messageList)
     
     def setLeader(self):
         val = self.getInterval()/10
@@ -79,12 +87,19 @@ class ProposerServer(object):
         return elements
 proposer = ProposerServer()
 l = list()
-l.append(proposer.CREATE)
-l.append("THing")
-l.append("JOP")
+l.append(proposer.UPDATE)
+l.append("891001/7204")
+l.append("Marek")
+l.append("Barak")
+l.append("23")
 
-data = proposer.createMessage(proposer.PROPOSE,l)
-proposer.sendAll(data)
+data = proposer.createProposeMessage(l);
+responses = proposer.sendAll(data)
+if proposer.allPrommises(responses):
+    message = proposer.createAcceptMessage(l)
+    proposer.sendAll(message)
+    
+    
 
     
     
