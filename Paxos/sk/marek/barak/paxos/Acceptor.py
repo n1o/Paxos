@@ -82,6 +82,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
             
     def insertIntoUsers(self,values):
         conx = mysql.connector.connect(user='marek',database='PocitacoveSiete',password='pocitacovesiete')
+        #conx = mysql.connector.connect(user='marek',database='PocitacoveSiete')
         curA = conx.cursor(buffered=True)
         query = ("insert into User(user_id,name,last_name,age)"
                  "values(%s,%s,%s,%s)")
@@ -91,6 +92,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         
     def updateUsers(self,values):
         conx = mysql.connector.connect(user='marek',database='PocitacoveSiete',password='pocitacovesiete')
+        #conx = mysql.connector.connect(user='marek',database='PocitacoveSiete')
         curA = conx.cursor(buffered=True)
         query = ("update User set name = %s, last_name = %s,age=%s where user_id = %s")
         curA.execute(query,(values.pop(1),values.pop(1),int(values.pop(1)),values.pop(0)))
@@ -99,6 +101,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         
     def deleteUser(self,values):
         conx = mysql.connector.connect(user='marek',database='PocitacoveSiete',password='pocitacovesiete')
+        #conx = mysql.connector.connect(user='marek',database='PocitacoveSiete')
         curA = conx.cursor(buffered=True)
         query = ("delete from User where user_id = '"+values.pop(0)+"'")
         curA.execute(query)
@@ -107,7 +110,8 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
             
 if __name__ == "__main__":
     HOST, PORT = "192.168.28.1", 9999
-    # Create the server, binding to localhost on port 9999
+    #HOST, PORT = "192.168.28.1", 9999
+    
     server = SocketServer.TCPServer((HOST, PORT), MyTCPHandler)
 
     # Activate the server; this will keep running until you
